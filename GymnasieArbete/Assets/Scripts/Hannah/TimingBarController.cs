@@ -5,27 +5,25 @@ public class TimingBarController : MonoBehaviour
     public Transform Indicator;
     public Transform greenZone;
 
-    public float moveSpeed = 0.01f;
+    public float moveSpeed = 0.1f;
     private bool movingRight = true;
     private bool isStopped = false;
 
+    private bool gameEnded = false;
+
     void Update()
     {
-        if (!isStopped)
+        if (!gameEnded)
         {
-            MoveIndicator();
+            if (!isStopped)
+            {
+                MoveIndicator();
 
-            if (Input.GetMouseButtonDown(0))
-            {
-                isStopped = true;
-                CheckSuccess();
-            }
-        }
-        else
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                ResetIndicator();
+                if (Input.GetMouseButtonDown(0))
+                {
+                    isStopped = true;
+                    CheckSuccess();
+                }
             }
         }
     }
@@ -54,16 +52,17 @@ public class TimingBarController : MonoBehaviour
 
         if (distance < 0.5f)
         {
+            EndGame();
         }
         else
         {
+            EndGame();
         }
     }
 
-    void ResetIndicator()
+    void EndGame()
     {
-        Indicator.localPosition = new Vector3(-2.5f, Indicator.localPosition.y, Indicator.localPosition.z);
-        isStopped = false;
-        movingRight = true;
+        gameEnded = true;
+        isStopped = true;
     }
 }
