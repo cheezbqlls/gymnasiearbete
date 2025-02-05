@@ -499,7 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Indicator: {fileID: 1152577894}
   greenZone: {fileID: 1902046362}
-  moveSpeed: 2
+  moveSpeed: 0.01
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
