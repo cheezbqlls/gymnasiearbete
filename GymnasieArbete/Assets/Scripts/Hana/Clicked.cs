@@ -5,10 +5,12 @@ using UnityEngine;
 public class Clicked : MonoBehaviour
 {
     public int count;
+    public string clicked;
     public void OnMouseDown()
     {
         Debug.Log("yes");
         count += 1;
+        
         
     }
     // Start is called before the first frame update
