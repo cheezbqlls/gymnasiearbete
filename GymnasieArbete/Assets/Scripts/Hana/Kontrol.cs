@@ -8,13 +8,20 @@ public class Kontrol : MonoBehaviour
     public List<string> order = new List<string>();
     public List<string> check = new List<string>();
 
+    public GameObject red;
+    public GameObject green;
+    public GameObject blue;
+    public GameObject yellow;
+
+
 
     public int step = 0;
     public bool playerTurn = false;
     void Start()
     {
-        GenerateSequence(4); 
-        
+        GenerateSequence(4);
+        StartCoroutine(PlaySequence());
+
     }
 
     // Generate a random sequence
@@ -34,7 +41,39 @@ public class Kontrol : MonoBehaviour
         foreach (string color in order)
         {
             Debug.Log("Simon Says: " + color);
-            yield return new WaitForSeconds(1f);
+            if(color == "Red")
+            {
+                red.SetActive(true);
+                yield return new WaitForSeconds(1f);
+                red.SetActive(false);
+
+            }
+            if (color == "Green")
+            {
+                green.SetActive(true);
+                yield return new WaitForSeconds(1f);
+                green.SetActive(false);
+
+
+            }
+            if (color == "Blue")
+            {
+                blue.SetActive(true);
+                yield return new WaitForSeconds(1f);
+                blue.SetActive(false);
+
+
+            }
+            if (color == "Yellow")
+            {
+                yellow.SetActive(true);
+                yield return new WaitForSeconds(1f);
+                yellow.SetActive(false);
+
+
+            }
+            yield return new WaitForSeconds(0.5f);
+
         }
 
         playerTurn = true;
@@ -46,6 +85,7 @@ public class Kontrol : MonoBehaviour
     public void OnColorClicked(string color)
     {
         if (!playerTurn) return;
+
 
         check.Add(color);
         Debug.Log("Player clicked: " + color);
