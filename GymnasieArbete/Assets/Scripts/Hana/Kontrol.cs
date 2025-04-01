@@ -33,14 +33,13 @@ public class Kontrol : MonoBehaviour
             order.Add(colors[Random.Range(0, colors.Length)]);
         }
     }
-    System.Collections.IEnumerator PlaySequence()
+    IEnumerator PlaySequence()
     {
         playerTurn = false;
         yield return new WaitForSeconds(1f);
 
         foreach (string color in order)
         {
-            Debug.Log("Simon Says: " + color);
             if(color == "Red")
             {
                 red.SetActive(true);
@@ -92,7 +91,7 @@ public class Kontrol : MonoBehaviour
 
         if (check[step] != order[step])
         {
-            Debug.Log("Wrong Color! Game Over.");
+            Debug.Log("Game over");
             ResetGame();
             return;
         }
@@ -101,8 +100,8 @@ public class Kontrol : MonoBehaviour
 
         if (step == order.Count)
         {
-            Debug.Log("Correct Sequence! Next Round.");
-            StartCoroutine(PlaySequence());
+            Debug.Log("Done");
+            ResetGame();
         }
     }
 
@@ -123,10 +122,4 @@ public class Kontrol : MonoBehaviour
         
     }
 
-
-    public void ReactToClick()
-    {
-        
-        Debug.Log("Objects been clicked");
-    }
 }
