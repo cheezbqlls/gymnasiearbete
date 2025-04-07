@@ -7,26 +7,39 @@ public class Kontrol : MonoBehaviour
     public string[] colors = { "Red", "Green", "Yellow", "Blue" };
     public List<string> order = new List<string>();
     public List<string> check = new List<string>();
+    public List<string> orderUp = new List<string>() { "Red", "Blue", "Green", "Yellow" };
+    public List<string> orderDown = new List<string>();
+
+
 
     public GameObject red;
     public GameObject green;
     public GameObject blue;
     public GameObject yellow;
 
-
+    AudioManager audioManager;
 
     public int step = 0;
     public bool playerTurn = false;
+    public int round = 0;
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
+        orderDown = new List<string>(orderUp);
+        orderDown.Reverse();
         GenerateSequence(4);
         StartCoroutine(PlaySequence());
 
     }
 
-    // Generate a random sequence
     void GenerateSequence(int length)
     {
+        round += 1;
+        Debug.Log("Current round:" + round.ToString());
         order.Clear();
         for (int i = 0; i < length; i++)
         {
@@ -43,6 +56,7 @@ public class Kontrol : MonoBehaviour
             if(color == "Red")
             {
                 red.SetActive(true);
+                audioManager.PlayBeep(audioManager.red);
                 yield return new WaitForSeconds(1f);
                 red.SetActive(false);
 
@@ -50,6 +64,7 @@ public class Kontrol : MonoBehaviour
             if (color == "Green")
             {
                 green.SetActive(true);
+                audioManager.PlayBeep(audioManager.green);
                 yield return new WaitForSeconds(1f);
                 green.SetActive(false);
 
@@ -58,6 +73,7 @@ public class Kontrol : MonoBehaviour
             if (color == "Blue")
             {
                 blue.SetActive(true);
+                audioManager.PlayBeep(audioManager.blue);
                 yield return new WaitForSeconds(1f);
                 blue.SetActive(false);
 
@@ -66,6 +82,7 @@ public class Kontrol : MonoBehaviour
             if (color == "Yellow")
             {
                 yellow.SetActive(true);
+                audioManager.PlayBeep(audioManager.yellow);
                 yield return new WaitForSeconds(1f);
                 yellow.SetActive(false);
 
@@ -80,7 +97,7 @@ public class Kontrol : MonoBehaviour
         check.Clear();
     }
 
-    // Call this when a color button is clicked
+
     public void OnColorClicked(string color)
     {
         if (!playerTurn) return;
@@ -88,13 +105,31 @@ public class Kontrol : MonoBehaviour
 
         check.Add(color);
         Debug.Log("Player clicked: " + color);
+        bool isCorrectColor = false;
 
-        if (check[step] != order[step])
+
+        if (check[step] == order[step])
         {
-            Debug.Log("Game over");
-            ResetGame();
-            return;
+            isCorrectColor = true;
         }
+        else if (check[step] == orderUp[step])
+        {
+            isCorrectColor = true;
+        }
+        else if (check[step] == orderDown[step])
+        {
+            isCorrectColor = true;
+        }
+
+    
+        if (!isCorrectColor)
+        {
+            Debug.Log("? Game over");
+            step = 0; 
+            check.Clear(); 
+            return; 
+        }
+
 
         step++;
 
@@ -105,6 +140,13 @@ public class Kontrol : MonoBehaviour
         }
     }
 
+    public void OnShowAgainClicked()
+    {
+        StartCoroutine(PlaySequence());
+        step = 0;
+        check.Clear();
+
+    }
     void ResetGame()
     {
         step = 0;
