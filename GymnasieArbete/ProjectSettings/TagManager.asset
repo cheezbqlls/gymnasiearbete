@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BrokenPart
   - correctBrokenPartTag
+  - Audio
   layers:
   - Default
   - TransparentFX

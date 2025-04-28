@@ -8,6 +8,7 @@ public class Kontrol : MonoBehaviour
     public List<string> order = new List<string>();
     public List<string> check = new List<string>();
     public List<string> orderUp = new List<string>() { "Red", "Blue", "Green", "Yellow" };
+    public List<string> rainbow = new List<string>() { "Red", "Yellow", "Green", "Blue" };
     public List<string> orderDown = new List<string>();
 
 
@@ -21,7 +22,8 @@ public class Kontrol : MonoBehaviour
 
     public int step = 0;
     public bool playerTurn = false;
-    public int round = 0;
+    public int round = 1;
+    public int amount = 4;
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -29,27 +31,43 @@ public class Kontrol : MonoBehaviour
 
     void Start()
     {
+       
         orderDown = new List<string>(orderUp);
         orderDown.Reverse();
-        GenerateSequence(4);
+        GenerateSequence(amount);
         StartCoroutine(PlaySequence());
 
     }
 
     void GenerateSequence(int length)
     {
-        round += 1;
+      
         Debug.Log("Current round:" + round.ToString());
         order.Clear();
         for (int i = 0; i < length; i++)
         {
             order.Add(colors[Random.Range(0, colors.Length)]);
         }
+        if(order == rainbow)
+        {
+            round -= 1;
+            ResetGame();
+        }
+        else if(order == orderDown)
+        {
+            round -= 1;
+            ResetGame();
+        }
+        else if(order == orderUp)
+        {
+            round -= 1;
+            ResetGame();
+        }
     }
     IEnumerator PlaySequence()
     {
         playerTurn = false;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         foreach (string color in order)
         {
@@ -120,6 +138,10 @@ public class Kontrol : MonoBehaviour
         {
             isCorrectColor = true;
         }
+        else if(check[step] == rainbow[step])
+        {
+            isCorrectColor = true;
+        }
 
     
         if (!isCorrectColor)
@@ -151,7 +173,8 @@ public class Kontrol : MonoBehaviour
     {
         step = 0;
         check.Clear();
-        GenerateSequence(4);
+        round += 1;
+        GenerateSequence(amount);
         StartCoroutine(PlaySequence());
     }
 
