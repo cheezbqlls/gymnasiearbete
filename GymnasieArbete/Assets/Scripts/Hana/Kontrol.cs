@@ -10,6 +10,7 @@ public class Kontrol : MonoBehaviour
     public List<string> orderUp = new List<string>() { "Red", "Blue", "Green", "Yellow" };
     public List<string> rainbow = new List<string>() { "Red", "Yellow", "Green", "Blue" };
     public List<string> orderDown = new List<string>();
+    public List<string> melody = new List<string>() { "Red", "Green", "Blue", "Red", "Blue", "Yellow" };
 
 
 
@@ -24,6 +25,7 @@ public class Kontrol : MonoBehaviour
     public bool playerTurn = false;
     public int round = 1;
     public int amount = 4;
+    public int melodyStep;
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -124,23 +126,34 @@ public class Kontrol : MonoBehaviour
         check.Add(color);
         Debug.Log("Player clicked: " + color);
         bool isCorrectColor = false;
+        if (check[step] == melody[step])
+        {
+            isCorrectColor = true;
+            melodyStep += 1;
+        }
 
-
-        if (check[step] == order[step])
+        if(step <= 4)
         {
-            isCorrectColor = true;
+            if (check[step] == order[step])
+            {
+                isCorrectColor = true;
+            }
+            else if (check[step] == orderUp[step])
+            {
+                isCorrectColor = true;
+            }
+            else if (check[step] == orderDown[step])
+            {
+                isCorrectColor = true;
+            }
+            else if (check[step] == rainbow[step])
+            {
+                isCorrectColor = true;
+            }
         }
-        else if (check[step] == orderUp[step])
+        else
         {
-            isCorrectColor = true;
-        }
-        else if (check[step] == orderDown[step])
-        {
-            isCorrectColor = true;
-        }
-        else if(check[step] == rainbow[step])
-        {
-            isCorrectColor = true;
+            Debug.Log("MELODY");
         }
 
     
@@ -155,7 +168,12 @@ public class Kontrol : MonoBehaviour
 
         step++;
 
-        if (step == order.Count)
+        if (step == 4 && melodyStep != 4)
+        {
+            Debug.Log("Done");
+            ResetGame();
+        }
+        else if(melodyStep == 6)
         {
             Debug.Log("Done");
             ResetGame();

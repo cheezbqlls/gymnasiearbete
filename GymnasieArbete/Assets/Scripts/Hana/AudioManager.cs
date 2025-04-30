@@ -5,11 +5,14 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public AudioSource beep;
+    public AudioSource music;
 
     public AudioClip red;
     public AudioClip blue;
     public AudioClip green;
     public AudioClip yellow;
+    public AudioClip Melody;
+    
 
     // Start is called before the first frame update
     void Start()
