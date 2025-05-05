@@ -30,4 +30,9 @@ public class AudioManager : MonoBehaviour
     {
         beep.PlayOneShot(clip);
     }
+
+    public void PlayMusic(AudioClip clip)
+    {
+        music.PlayOneShot(clip);
+    }
 }

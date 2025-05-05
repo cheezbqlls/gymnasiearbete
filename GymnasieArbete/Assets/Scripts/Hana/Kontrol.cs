@@ -18,6 +18,7 @@ public class Kontrol : MonoBehaviour
     public GameObject green;
     public GameObject blue;
     public GameObject yellow;
+    public GameObject canvas;
 
     AudioManager audioManager;
 
@@ -26,6 +27,9 @@ public class Kontrol : MonoBehaviour
     public int round = 1;
     public int amount = 4;
     public int melodyStep;
+    bool melodyOrder = false;
+    bool canvasActive;
+    int loop;
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -33,12 +37,9 @@ public class Kontrol : MonoBehaviour
 
     void Start()
     {
-       
         orderDown = new List<string>(orderUp);
         orderDown.Reverse();
         GenerateSequence(amount);
-        StartCoroutine(PlaySequence());
-
     }
 
     void GenerateSequence(int length)
@@ -68,53 +69,65 @@ public class Kontrol : MonoBehaviour
     }
     IEnumerator PlaySequence()
     {
-        playerTurn = false;
-        yield return new WaitForSeconds(2f);
-
-        foreach (string color in order)
+        if (round == 2)
         {
-            if(color == "Red")
-            {
-                red.SetActive(true);
-                audioManager.PlayBeep(audioManager.red);
-                yield return new WaitForSeconds(1f);
-                red.SetActive(false);
-
-            }
-            if (color == "Green")
-            {
-                green.SetActive(true);
-                audioManager.PlayBeep(audioManager.green);
-                yield return new WaitForSeconds(1f);
-                green.SetActive(false);
-
-
-            }
-            if (color == "Blue")
-            {
-                blue.SetActive(true);
-                audioManager.PlayBeep(audioManager.blue);
-                yield return new WaitForSeconds(1f);
-                blue.SetActive(false);
-
-
-            }
-            if (color == "Yellow")
-            {
-                yellow.SetActive(true);
-                audioManager.PlayBeep(audioManager.yellow);
-                yield return new WaitForSeconds(1f);
-                yellow.SetActive(false);
-
-
-            }
-            yield return new WaitForSeconds(0.5f);
-
+            canvas.SetActive(true);
+            canvasActive = true;
+            loop = 0;
         }
+        if (canvasActive == false)
+        {
+            yield return new WaitForSeconds(2f);
+            audioManager.PlayMusic(audioManager.Melody);
+            playerTurn = false;
+            yield return new WaitForSeconds(6f);
 
-        playerTurn = true;
-        step = 0;
-        check.Clear();
+            foreach (string color in order)
+            {
+                if (color == "Red")
+                {
+                    red.SetActive(true);
+                    audioManager.PlayBeep(audioManager.red);
+                    yield return new WaitForSeconds(1f);
+                    red.SetActive(false);
+
+                }
+                if (color == "Green")
+                {
+                    green.SetActive(true);
+                    audioManager.PlayBeep(audioManager.green);
+                    yield return new WaitForSeconds(1f);
+                    green.SetActive(false);
+
+
+                }
+                if (color == "Blue")
+                {
+                    blue.SetActive(true);
+                    audioManager.PlayBeep(audioManager.blue);
+                    yield return new WaitForSeconds(1f);
+                    blue.SetActive(false);
+
+
+                }
+                if (color == "Yellow")
+                {
+                    yellow.SetActive(true);
+                    audioManager.PlayBeep(audioManager.yellow);
+                    yield return new WaitForSeconds(1f);
+                    yellow.SetActive(false);
+
+
+                }
+                yield return new WaitForSeconds(0.5f);
+
+            }
+
+            playerTurn = true;
+            step = 0;
+            check.Clear();
+        }
+        
     }
 
 
@@ -126,62 +139,77 @@ public class Kontrol : MonoBehaviour
         check.Add(color);
         Debug.Log("Player clicked: " + color);
         bool isCorrectColor = false;
-        if (check[step] == melody[step])
+        if (step < melody.Count && check[step] == melody[step])
         {
             isCorrectColor = true;
             melodyStep += 1;
         }
 
-        if(step <= 4)
+        
+        
+        if ( step < order.Count && check[step] == order[step])
         {
-            if (check[step] == order[step])
-            {
-                isCorrectColor = true;
-            }
-            else if (check[step] == orderUp[step])
-            {
-                isCorrectColor = true;
-            }
-            else if (check[step] == orderDown[step])
-            {
-                isCorrectColor = true;
-            }
-            else if (check[step] == rainbow[step])
-            {
-                isCorrectColor = true;
-            }
+            isCorrectColor = true;
         }
+        else if (step < orderUp.Count && check[step] == orderUp[step])
+        {
+            isCorrectColor = true;
+        }
+        else if (step < orderDown.Count && check[step] == orderDown[step])
+        {
+            isCorrectColor = true;
+        }
+        else if (step < rainbow.Count && check[step] == rainbow[step])
+        {
+            isCorrectColor = true;
+        }
+        
         else
         {
             Debug.Log("MELODY");
         }
 
+        if(melodyStep == 4)
+        {
+            melodyOrder = true;
+        }
+        if(melodyOrder == false)
+        {
+            if (check.Count == order.Count)
+            {
+                Debug.Log("Done");
+                melodyOrder = false;
+                ResetGame();
+            }
+        }
+        if(melodyOrder == true)
+        {
+            if(check.Count == melody.Count)
+            {
+                Debug.Log("Done");
+                melodyOrder = false;
+                ResetGame();
+            }
+        }
     
         if (!isCorrectColor)
         {
             Debug.Log("? Game over");
             step = 0; 
-            check.Clear(); 
-            return; 
+            check.Clear();
+            melodyOrder = false;
+            return;
         }
 
 
         step++;
 
-        if (step == 4 && melodyStep != 4)
-        {
-            Debug.Log("Done");
-            ResetGame();
-        }
-        else if(melodyStep == 6)
-        {
-            Debug.Log("Done");
-            ResetGame();
-        }
+        
     }
 
     public void OnShowAgainClicked()
     {
+
         StartCoroutine(PlaySequence());
         step = 0;
         check.Clear();
@@ -201,7 +229,13 @@ public class Kontrol : MonoBehaviour
     void Update()
     {
        
-
+        if(canvas.activeInHierarchy == false && loop <= 1)
+        {
+            canvasActive = false;
+            Debug.Log("NO CANVAS");
+            loop += 1;
+            StartCoroutine(PlaySequence());
+        }
         
     }
 
