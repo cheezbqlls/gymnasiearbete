@@ -7,6 +7,7 @@ public class ExitCanvas : MonoBehaviour
 {
     public Button exit;
     public GameObject canvas;
+    public Kontrol kontrol;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,5 +23,8 @@ public class ExitCanvas : MonoBehaviour
     void HideUI()
     {
         canvas.SetActive(false);
+        kontrol.round = 0;
+        kontrol.canvasActive = false;
+        kontrol.OnShowAgainClicked();
     }
 }

@@ -28,8 +28,7 @@ public class Kontrol : MonoBehaviour
     public int amount = 4;
     public int melodyStep;
     bool melodyOrder = false;
-    bool canvasActive;
-    int loop;
+    public bool canvasActive;
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -39,6 +38,7 @@ public class Kontrol : MonoBehaviour
     {
         orderDown = new List<string>(orderUp);
         orderDown.Reverse();
+        canvasActive = false;
         GenerateSequence(amount);
     }
 
@@ -66,6 +66,7 @@ public class Kontrol : MonoBehaviour
             round -= 1;
             ResetGame();
         }
+        StartCoroutine(PlaySequence());
     }
     IEnumerator PlaySequence()
     {
@@ -73,7 +74,6 @@ public class Kontrol : MonoBehaviour
         {
             canvas.SetActive(true);
             canvasActive = true;
-            loop = 0;
         }
         if (canvasActive == false)
         {
@@ -229,13 +229,6 @@ public class Kontrol : MonoBehaviour
     void Update()
     {
        
-        if(canvas.activeInHierarchy == false && loop <= 1)
-        {
-            canvasActive = false;
-            Debug.Log("NO CANVAS");
-            loop += 1;
-            StartCoroutine(PlaySequence());
-        }
         
     }
 
