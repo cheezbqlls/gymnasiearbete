@@ -23,7 +23,6 @@ public class ExitCanvas : MonoBehaviour
     void HideUI()
     {
         canvas.SetActive(false);
-        kontrol.round = 0;
         kontrol.canvasActive = false;
         kontrol.OnShowAgainClicked();
     }

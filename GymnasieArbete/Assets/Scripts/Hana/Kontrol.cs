@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Kontrol : MonoBehaviour
 {
+    [Header("--------Lists--------")]
     public string[] colors = { "Red", "Green", "Yellow", "Blue" };
     public List<string> order = new List<string>();
     public List<string> check = new List<string>();
@@ -12,8 +14,7 @@ public class Kontrol : MonoBehaviour
     public List<string> orderDown = new List<string>();
     public List<string> melody = new List<string>() { "Red", "Green", "Blue", "Red", "Blue", "Yellow" };
 
-
-
+    [Header("--------Game Objects--------")]
     public GameObject red;
     public GameObject green;
     public GameObject blue;
@@ -22,13 +23,20 @@ public class Kontrol : MonoBehaviour
 
     AudioManager audioManager;
 
+    public TMP_Text story;
+
+    [Header("--------Ints--------")]
     public int step = 0;
-    public bool playerTurn = false;
     public int round = 1;
     public int amount = 4;
     public int melodyStep;
-    bool melodyOrder = false;
+    int postit = 0;
+
+    [Header("--------Bools--------")]
     public bool canvasActive;
+    public bool playerTurn = false;
+    bool melodyOrder = false;
+
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
@@ -70,11 +78,6 @@ public class Kontrol : MonoBehaviour
     }
     IEnumerator PlaySequence()
     {
-        if (round == 2)
-        {
-            canvas.SetActive(true);
-            canvasActive = true;
-        }
         if (canvasActive == false)
         {
             yield return new WaitForSeconds(2f);
@@ -177,19 +180,45 @@ public class Kontrol : MonoBehaviour
         {
             if (check.Count == order.Count)
             {
-                Debug.Log("Done");
-                melodyOrder = false;
-                ResetGame();
+                for(int h = 0; h<4; h++)
+                {
+                    Debug.Log("Inside for loop");
+                    if (orderUp[h] == check[h])
+                    {
+                        postit += 1;
+                    }
+                   
+                }
+                if(postit == 4)
+                {
+                    
+                    canvas.SetActive(true);
+                    story.text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+                }
+                else
+                {
+                    Debug.Log("Done");
+                    melodyOrder = false;
+                    ResetGame();
+                }
+                
             }
         }
-        if(melodyOrder == true)
+        if(melodyOrder == true )
         {
             if(check.Count == melody.Count)
             {
-                Debug.Log("Done");
-                melodyOrder = false;
-                ResetGame();
+                for (int y = 0; y < 6; y++)
+                {
+                    if (check[y] == melody[y])
+                    {
+                        canvas.SetActive(true);
+                        story.text = "melooooddyyyy";
+                    }
+                }
             }
+           
+            
         }
     
         if (!isCorrectColor)
