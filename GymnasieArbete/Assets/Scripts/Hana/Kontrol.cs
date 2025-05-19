@@ -22,6 +22,7 @@ public class Kontrol : MonoBehaviour
     public GameObject canvas;
 
     AudioManager audioManager;
+    ChangeSound changeSound;
 
     public TMP_Text story;
 
@@ -40,6 +41,7 @@ public class Kontrol : MonoBehaviour
     private void Awake()
     {
         audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+        changeSound = GameObject.FindGameObjectWithTag("Sound").GetComponent<ChangeSound>();
     }
 
     void Start()
@@ -81,9 +83,11 @@ public class Kontrol : MonoBehaviour
         if (canvasActive == false)
         {
             yield return new WaitForSeconds(2f);
+            changeSound.MelodyOn();
             audioManager.PlayMusic(audioManager.Melody);
             playerTurn = false;
             yield return new WaitForSeconds(6f);
+            changeSound.MelodyOff();
 
             foreach (string color in order)
             {
@@ -193,7 +197,7 @@ public class Kontrol : MonoBehaviour
                 {
                     
                     canvas.SetActive(true);
-                    story.text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+                    story.text = "Subjektet vaknade enligt protokoll. Förvirrad men stabil. De första testerna visade lovande respons. Intelligensnivå, relativt hög. Fortsättning sektion B";
                 }
                 else
                 {
@@ -213,7 +217,7 @@ public class Kontrol : MonoBehaviour
                     if (check[y] == melody[y])
                     {
                         canvas.SetActive(true);
-                        story.text = "melooooddyyyy";
+                        story.text = "Han kallar det “Det perfekta sinnet” men vi vet inte vad han tänker göra med det. Du måste ta dig ur innan fas 3";
                     }
                 }
             }
