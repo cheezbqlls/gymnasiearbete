@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEditor;
 
 public class Kontrol : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class Kontrol : MonoBehaviour
     public List<string> rainbow = new List<string>() { "Red", "Yellow", "Green", "Blue" };
     public List<string> orderDown = new List<string>();
     public List<string> melody = new List<string>() { "Red", "Green", "Blue", "Red", "Blue", "Yellow" };
+    List<string> outputs = new List<string>() {
+        "Subjektet vaknade enligt protokoll.Förvirrad men stabil.De första testerna visade lovande respons.Intelligensnivå, relativt hög.Fortsättning sektion B" , 
+        "Du är inte ensam. Någon iakttar allt. Tänk på vad du hör – vissa budskap vill hjälpa, andra vill ta kontroll.", 
+        "Du har redan gått längre än de flesta. Fascinerande. Jag undrar… vad blir kvar av dig när vi är färdiga?", 
+        "Han kallar det “Det perfekta sinnet” men vi vet inte vad han tänker göra med det. Du måste ta dig ur innan fas 3", 
+        "Projektet skulle rädda mänskligheten. Men han förändrades. Började prata om evolution, om en ny ordning. De flesta av oss stängdes ner. Jag gömde mig. Jag är rädd" };
 
     [Header("--------Game Objects--------")]
     public GameObject red;
@@ -32,6 +39,9 @@ public class Kontrol : MonoBehaviour
     public int amount = 4;
     public int melodyStep;
     int postit = 0;
+    int postit2 = 0;
+    int postit3 = 0;
+    int whatText = 0;
 
     [Header("--------Bools--------")]
     public bool canvasActive;
@@ -190,14 +200,26 @@ public class Kontrol : MonoBehaviour
                     if (orderUp[h] == check[h])
                     {
                         postit += 1;
+                       
                     }
-                   
+                    if (orderDown[h] == check[h])
+                    {
+                        postit2 += 1;
+                    }
+                    if (rainbow[h] == check[h])
+                    {
+                        postit3 += 1;
+                    }
+
                 }
-                if(postit == 4)
+                if (postit == 4 || postit2 == 4 || postit3 == 4)
                 {
-                    
+                    whatText += 1;
                     canvas.SetActive(true);
-                    story.text = "Subjektet vaknade enligt protokoll. Förvirrad men stabil. De första testerna visade lovande respons. Intelligensnivå, relativt hög. Fortsättning sektion B";
+                    story.text = outputs[whatText - 1];
+                    postit = 0;
+                    postit2 = 0;
+                    postit3 = 0;
                 }
                 else
                 {
@@ -216,8 +238,9 @@ public class Kontrol : MonoBehaviour
                 {
                     if (check[y] == melody[y])
                     {
+                        whatText += 1;
                         canvas.SetActive(true);
-                        story.text = "Han kallar det “Det perfekta sinnet” men vi vet inte vad han tänker göra med det. Du måste ta dig ur innan fas 3";
+                        story.text = outputs[whatText - 1];
                     }
                 }
             }
